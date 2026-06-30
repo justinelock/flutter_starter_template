@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/localization/l10n_extensions.dart';
 import '../../../../app/router/app_routes.dart';
-import '../../../../core/widgets/glass_button.dart';
+import '../../../../app/theme/typography_extensions.dart';
 import '../../../../core/widgets/glass_button.dart';
 import '../../../../core/widgets/glass_scaffold.dart';
 import '../../../../shared/widgets/page_container.dart';
@@ -14,17 +14,14 @@ class NotFoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final typography = context.typography;
 
-    // 404 页面只提供返回首页的安全路径，避免用户停留在无效路由。
     return AppGlassScaffold(
       body: PageContainer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              l10n.pageNotFound,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text(l10n.pageNotFound, style: typography.pageTitle),
             const SizedBox(height: 16),
             AppGlassButton(
               label: l10n.backHomeAction,

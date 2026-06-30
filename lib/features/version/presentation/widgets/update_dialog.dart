@@ -6,6 +6,7 @@ import '../../../../app/design/app_radius.dart';
 import '../../../../app/design/app_spacing.dart';
 import '../../../../app/localization/l10n_extensions.dart';
 import '../../../../app/theme/theme_extensions.dart';
+import '../../../../app/theme/typography_extensions.dart';
 import '../../../../core/constants/app_svg_assets.dart';
 import '../../../../core/widgets/app_svg_icon.dart';
 import '../../../../core/widgets/glass_button.dart';
@@ -14,7 +15,7 @@ import '../../domain/entities/version_info.dart';
 
 enum UpdateDialogAction { skip, update }
 
-/// 版本更新弹窗：布局参考设计稿，玻璃卡片与主按钮仍走 liquid_glass_widgets 封装。
+/// 版本更新弹窗：排版全部走 [AppTypographyTokens] 语义 token。
 class UpdateDialog extends StatelessWidget {
   const UpdateDialog({required this.info, super.key});
 
@@ -23,6 +24,7 @@ class UpdateDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final typography = context.typography;
 
     return PopScope(
       canPop: !info.forceUpdate,
@@ -32,7 +34,6 @@ class UpdateDialog extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: 360,
-            // 小屏上限制弹窗高度并允许滚动，避免更新内容过多时纵向溢出。
             maxHeight: MediaQuery.sizeOf(context).height * 0.78,
           ),
           child: AppGlassCard(
@@ -46,39 +47,32 @@ class UpdateDialog extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                const _UpdateDialogIcon(),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  info.forceUpdate
-                      ? l10n.requiredUpdateTitle
-                      : l10n.updateAvailableTitle,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  l10n.updateDialogSubtitle,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    height: 1.45,
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                _VersionComparePanel(info: info, l10n: l10n),
-                if (_releaseNotes(info.description).isNotEmpty) ...[
+                  const _UpdateDialogIcon(),
                   const SizedBox(height: AppSpacing.md),
-                  _UpdateContentSection(
-                    title: l10n.updateContentTitle,
-                    items: _releaseNotes(info.description),
+                  Text(
+                    info.forceUpdate
+                        ? l10n.requiredUpdateTitle
+                        : l10n.updateAvailableTitle,
+                    textAlign: TextAlign.center,
+                    style: typography.updateTitle,
                   ),
-                ],
-                const SizedBox(height: AppSpacing.lg),
-                _UpdateDialogActions(info: info, l10n: l10n),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l10n.updateDialogSubtitle,
+                    textAlign: TextAlign.center,
+                    style: typography.dialogBody,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _VersionComparePanel(info: info, l10n: l10n),
+                  if (_releaseNotes(info.description).isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    _UpdateContentSection(
+                      title: l10n.updateContentTitle,
+                      items: _releaseNotes(info.description),
+                    ),
+                  ],
+                  const SizedBox(height: AppSpacing.lg),
+                  _UpdateDialogActions(info: info, l10n: l10n),
                 ],
               ),
             ),
@@ -191,6 +185,8 @@ class _VersionCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typography;
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: AppSpacing.md,
@@ -198,21 +194,11 @@ class _VersionCell extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontSize: 12,
-            ),
-          ),
+          Text(label, style: typography.updateVersion),
           const SizedBox(height: AppSpacing.xxs),
           Text(
             version,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: versionColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 17,
-            ),
+            style: typography.cardTitle.copyWith(color: versionColor),
           ),
         ],
       ),
@@ -231,6 +217,7 @@ class _UpdateContentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typography;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Align(
@@ -238,13 +225,7 @@ class _UpdateContentSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
-              fontSize: 14,
-            ),
-          ),
+          Text(title, style: typography.formLabel),
           const SizedBox(height: AppSpacing.xs),
           ...items.map(
             (item) => Padding(
@@ -264,14 +245,7 @@ class _UpdateContentSection extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Text(
-                      item,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 13,
-                        height: 1.45,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
+                    child: Text(item, style: typography.updateDescription),
                   ),
                 ],
               ),
@@ -309,11 +283,12 @@ class _UpdateDialogActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typography;
+    final colors = context.colors;
     final updateLabel = info.platform == 'web'
         ? l10n.refreshAction
         : l10n.updateNowAction;
 
-    // 参考布局：左侧「稍后再说」为纯文字，右侧「立即更新」保留 prominent 玻璃按钮。
     if (info.forceUpdate) {
       return AppGlassButton(
         label: updateLabel,
@@ -324,14 +299,11 @@ class _UpdateDialogActions extends StatelessWidget {
       );
     }
 
-    final colors = context.colors;
-    final labelColor = colors.textSecondary;
-
     return Row(
       children: [
         TextButton(
           style: TextButton.styleFrom(
-            foregroundColor: labelColor,
+            foregroundColor: colors.textSecondary,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -340,10 +312,9 @@ class _UpdateDialogActions extends StatelessWidget {
               Navigator.of(context).pop(UpdateDialogAction.skip),
           child: Text(
             l10n.laterAction,
-            style: TextStyle(
-              fontSize: 15,
+            style: typography.buttonMedium.copyWith(
+              color: colors.textSecondary,
               fontWeight: FontWeight.w500,
-              color: labelColor,
             ),
           ),
         ),

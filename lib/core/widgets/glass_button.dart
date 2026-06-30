@@ -5,8 +5,9 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart' as lg;
 import '../../app/design/app_radius.dart';
 import '../../app/design/app_spacing.dart';
 import '../../app/theme/theme_extensions.dart';
+import '../../app/theme/typography_extensions.dart';
 
-/// 项目统一玻璃按钮：无彩色按压光晕，仅保留液态玻璃形变与模糊。
+/// 项目统一玻璃按钮：无彩色按压光晕，标签样式来自 [AppTypographyTokens]。
 class AppGlassButton extends StatelessWidget {
   const AppGlassButton({
     required this.label,
@@ -34,17 +35,14 @@ class AppGlassButton extends StatelessWidget {
     }
 
     final glass = context.glass;
-    // 跟随 iOS 26 / liquid_glass_widgets 对话框配色：次级用 label，主操作用白字。
-    final labelColor = prominent
-        ? CupertinoColors.white
-        : CupertinoColors.label.resolveFrom(context);
-    final textStyle = TextStyle(
-      fontSize: 15,
-      fontWeight: prominent ? FontWeight.w700 : FontWeight.w600,
-      color: labelColor,
-    );
+    final typography = context.typography;
+    // prominent 主操作用大号按钮 token + 白字；次级按钮跟随系统 label 色。
+    final textStyle = prominent
+        ? typography.buttonLarge.copyWith(color: CupertinoColors.white)
+        : typography.buttonMedium.copyWith(
+            color: CupertinoColors.label.resolveFrom(context),
+          );
 
-    // iOS 26 主操作按钮为胶囊形（圆角 = 高度 / 2），与系统 CTA 一致。
     return lg.GlassButton.custom(
       onTap: onPressed!,
       label: label,
@@ -58,7 +56,6 @@ class AppGlassButton extends StatelessWidget {
       shape: lg.LiquidRoundedSuperellipse(
         borderRadius: AppRadius.capsule(height),
       ),
-      // 关闭 GlassGlow 彩色光晕；玻璃 shader 侧 glowIntensity 亦置 0。
       glowColor: Colors.transparent,
       glowOpacity: 0,
       glowBlurRadius: 0,

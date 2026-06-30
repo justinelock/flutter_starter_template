@@ -19,12 +19,11 @@ class AppTextTheme {
   ];
 
   static TextTheme build({
-    required Brightness brightness,
+    required ColorScheme colorScheme,
     required AdaptiveTypographyScale scale,
   }) {
-    final color = brightness == Brightness.dark
-        ? const Color(0xFFE8ECF3)
-        : const Color(0xFF111827);
+    // 颜色跟随 ColorScheme，与 AppTypographyTokens / AppColorTokens 保持一致。
+    final color = colorScheme.onSurface;
 
     TextStyle style({
       required double size,

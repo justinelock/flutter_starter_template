@@ -41,7 +41,7 @@ class AppTheme {
     required AdaptiveTypographyScale scale,
   }) {
     final textTheme = AppTextTheme.build(
-      brightness: colorScheme.brightness,
+      colorScheme: colorScheme,
       scale: scale,
     );
     final typographyTokens = AppTypographyTokens.build(

@@ -7,6 +7,7 @@ import '../../../../app/design/app_spacing.dart';
 import '../../../../app/localization/l10n_extensions.dart';
 import '../../../../app/router/app_routes.dart';
 import '../../../../app/theme/theme_extensions.dart';
+import '../../../../app/theme/typography_extensions.dart';
 import '../../../../core/messaging/app_messenger.dart';
 import '../../../../core/messaging/app_snackbar.dart';
 import '../../../../core/widgets/glass_card.dart';
@@ -59,7 +60,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     final auth = ref.watch(authControllerProvider);
     final l10n = context.l10n;
-    final colorScheme = Theme.of(context).colorScheme;
 
     // 布局参考：Logo 独立浮在登录卡片上方，表单与主操作收纳在玻璃卡片内。
     return AppGlassScaffold(
@@ -113,7 +113,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           Text(
                             _localizedAuthError(auth.errorMessage!, l10n),
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: colorScheme.error),
+                            style: context.typography.errorText,
                           ),
                         ],
                         const SizedBox(height: AppSpacing.xl),

@@ -3,8 +3,9 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import '../../../../app/design/app_spacing.dart';
 import '../../../../app/theme/theme_extensions.dart';
+import '../../../../app/theme/typography_extensions.dart';
 
-/// 认证表单输入框：占位符即标签，校验错误单独展示；触摸无彩色光晕。
+/// 认证表单输入框：样式来自 [AppTypographyTokens]，触摸无彩色光晕。
 class AuthTextField extends StatelessWidget {
   const AuthTextField({
     required this.controller,
@@ -21,18 +22,8 @@ class AuthTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final glass = context.glass;
-    // 占位符用 onSurfaceVariant，输入正文用 onSurface，避免玻璃输入框里发灰看不清。
-    final placeholderStyle = TextStyle(
-      fontSize: 15,
-      color: colorScheme.onSurfaceVariant,
-    );
-    final textStyle = TextStyle(
-      fontSize: 16,
-      color: colorScheme.onSurface,
-      fontWeight: FontWeight.w500,
-    );
+    final typography = context.typography;
 
     return FormField<String>(
       validator: validator,
@@ -41,8 +32,8 @@ class AuthTextField extends StatelessWidget {
             ? GlassPasswordField(
                 controller: controller,
                 placeholder: label,
-                placeholderStyle: placeholderStyle,
-                textStyle: textStyle,
+                placeholderStyle: typography.inputPlaceholder,
+                textStyle: typography.inputText,
                 onChanged: field.didChange,
                 settings: glass.surfaceSettings,
                 interactionBehavior: GlassInteractionBehavior.scaleOnly,
@@ -51,8 +42,8 @@ class AuthTextField extends StatelessWidget {
             : GlassTextField(
                 controller: controller,
                 placeholder: label,
-                placeholderStyle: placeholderStyle,
-                textStyle: textStyle,
+                placeholderStyle: typography.inputPlaceholder,
+                textStyle: typography.inputText,
                 keyboardType: TextInputType.phone,
                 onChanged: field.didChange,
                 settings: glass.surfaceSettings,
@@ -66,14 +57,7 @@ class AuthTextField extends StatelessWidget {
             input,
             if (field.errorText != null) ...[
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                field.errorText!,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: colorScheme.error,
-                ),
-              ),
+              Text(field.errorText!, style: typography.errorText),
             ],
           ],
         );

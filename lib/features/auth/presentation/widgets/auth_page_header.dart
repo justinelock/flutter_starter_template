@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/design/app_spacing.dart';
+import '../../../../app/theme/typography_extensions.dart';
 import '../../../../shared/widgets/app_logo.dart';
 
-/// 认证页顶部品牌区：Logo + 标题，与表单区分离以提升视觉层次。
+/// 认证页顶部品牌区：Logo + [pageTitle] 标题。
 class AuthPageHeader extends StatelessWidget {
   const AuthPageHeader({
     required this.title,
@@ -16,7 +17,7 @@ class AuthPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final typography = context.typography;
 
     return Column(
       children: [
@@ -27,10 +28,7 @@ class AuthPageHeader extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.2,
-          ),
+          style: typography.pageTitle,
         ),
       ],
     );

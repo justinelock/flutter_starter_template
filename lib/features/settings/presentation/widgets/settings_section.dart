@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/design/app_spacing.dart';
+import '../../../../app/theme/typography_extensions.dart';
 import '../../../../core/widgets/glass_card.dart';
 
+/// 设置页分组：标题使用 [sectionTitle] token。
 class SettingsSection extends StatelessWidget {
   const SettingsSection({
     required this.title,
@@ -18,6 +20,8 @@ class SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typography;
+
     return AppGlassCard(
       padding: grouped ? EdgeInsets.zero : const EdgeInsets.all(AppSpacing.lg),
       child: Column(
@@ -32,7 +36,7 @@ class SettingsSection extends StatelessWidget {
                     AppSpacing.sm,
                   )
                 : EdgeInsets.zero,
-            child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+            child: Text(title, style: typography.sectionTitle),
           ),
           ...children,
         ],

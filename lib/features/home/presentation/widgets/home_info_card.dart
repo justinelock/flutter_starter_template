@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/typography_extensions.dart';
 import '../../../../core/constants/app_svg_assets.dart';
 import '../../../../core/widgets/app_svg_icon.dart';
 import '../../../../core/widgets/glass_card.dart';
 
+/// 首页信息卡片：标题/数值分别使用 [cardTitle] 与 [cardSubtitle] token。
 class HomeInfoCard extends StatelessWidget {
   const HomeInfoCard({
     required this.title,
@@ -19,13 +21,16 @@ class HomeInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typography;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppGlassCard(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppSvgIcon(
             assetPath: iconAsset ?? AppSvgAssets.info,
-            color: Theme.of(context).colorScheme.primary,
+            color: colorScheme.primary,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -36,13 +41,13 @@ class HomeInfoCard extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: typography.cardTitle,
                 ),
                 Text(
                   value,
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: typography.cardSubtitle,
                 ),
               ],
             ),
