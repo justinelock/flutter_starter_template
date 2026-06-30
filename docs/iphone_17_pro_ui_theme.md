@@ -102,3 +102,15 @@ blurLarge 40
 - 最后给组件使用示例
 
 请确保代码完整、命名清晰、可复制运行，并且整体视觉接近 iOS 26 Liquid Glass，而不是普通半透明卡片。
+
+额外建议：颜色策略
+这套配色的核心是 “深背景 + 高通透玻璃 + 柔和高亮色”。不要把 Liquid Glass 简单理解成 opacity: 0.3 的白色卡片，它至少应该由 背景模糊、半透明填充、细描边、内高光、外阴影、内容色彩反射 六部分组成。
+
+在 Flutter 里，建议把玻璃效果独立成 ThemeExtension，不要直接写死在组件里。这样亮色、暗色、品牌换肤、节假日主题都可以通过 Riverpod provider 动态切换。
+
+简要结论：
+
+暗色背景不要纯黑，推荐 #070A0F，更有 OLED 深邃感和层级。
+玻璃层推荐使用 rgba + BackdropFilter + stroke + shadow 组合。
+Flutter 侧建议用 Material 3 ColorScheme + ThemeExtension + Riverpod 3 Provider 三层结构。
+

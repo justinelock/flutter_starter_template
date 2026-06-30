@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starter_template/app/theme/app_color_schemes.dart';
 import 'package:flutter_starter_template/app/theme/app_color_tokens.dart';
 import 'package:flutter_starter_template/app/theme/app_glass_tokens.dart';
 import 'package:flutter_starter_template/app/theme/app_gradients.dart';
@@ -99,6 +100,26 @@ void main() {
       expect(theme.sliderTheme, isNotNull);
       expect(theme.tooltipTheme, isNotNull);
       expect(theme.badgeTheme, isNotNull);
+    });
+
+    test('color anchors match iphone_17_pro_ui_theme doc', () {
+      expect(AppColorSchemes.light.primary, const Color(0xFF0A84FF));
+      expect(AppColorSchemes.dark.surfaceDim, const Color(0xFF070A0F));
+      expect(AppColorTokens.light.backgroundBase, const Color(0xFFF7F8FB));
+      expect(AppColorTokens.dark.backgroundBase, const Color(0xFF070A0F));
+      expect(AppColorTokens.light.success, const Color(0xFF30D158));
+      expect(AppColorTokens.dark.destructive, const Color(0xFFFF6961));
+      expect(AppGlassTokens.light.glassBackground, const Color(0x94FFFFFF));
+      expect(AppGlassTokens.dark.glassBackground, const Color(0x8A141820));
+      expect(AppGlassTokens.light.glassStroke, const Color(0xB8FFFFFF));
+      expect(AppGlassTokens.dark.glassStroke, const Color(0x24FFFFFF));
+      expect(AppGlassTokens.blurSmall, 12);
+      expect(AppGlassTokens.blurMedium, 24);
+      expect(AppGlassTokens.blurLarge, 40);
+      expect(
+        AppGradients.light.appBackground.colors.first,
+        const Color(0xFFF7F8FB),
+      );
     });
   });
 }

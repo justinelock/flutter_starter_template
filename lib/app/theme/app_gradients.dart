@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// 页面背景渐变：清透、低饱和，色值与 [AppColorTokens] 对齐。
+/// 页面背景渐变：色值与 [AppColorTokens] / 文档颜色基准对齐。
 ///
-/// 禁止高饱和蓝紫大面积渐变，避免与插件 demo 冷蓝背景混淆。
+/// 亮色为雾白层次；暗色以 #070A0F 为底，避免纯黑并保留 OLED 深邃层级。
 @immutable
 class AppGradients extends ThemeExtension<AppGradients> {
   const AppGradients({
@@ -32,9 +32,9 @@ class AppGradients extends ThemeExtension<AppGradients> {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0xFFF7F9FE), // backgroundBase
-        Color(0xFFEFF4FC), // backgroundSubtle
-        Color(0xFFF7F9FE),
+        Color(0xFFF7F8FB),
+        Color(0xFFF3F4F6),
+        Color(0xFFF7F8FB),
       ],
       stops: [0, 0.55, 1],
     ),
@@ -42,50 +42,50 @@ class AppGradients extends ThemeExtension<AppGradients> {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0xFFFFFFFF), // backgroundElevated
-        Color(0xFFF7F9FE),
-        Color(0xFFEFF4FC),
+        Color(0xFFFFFFFF),
+        Color(0xFFF7F8FB),
+        Color(0xFFF3F4F6),
       ],
     ),
     auth: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color(0xFFF7F9FE),
-        Color(0xFFEFF4FC),
-        Color(0xFFF7F9FE),
+        Color(0xFFF7F8FB),
+        Color(0xFFF3F4F6),
+        Color(0xFFF7F8FB),
       ],
     ),
     home: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color(0xFFF7F9FE),
-        Color(0xFFF3F6FC),
-        Color(0xFFEFF4FC),
+        Color(0xFFF7F8FB),
+        Color(0xFFFFFFFF),
+        Color(0xFFF3F4F6),
       ],
     ),
     settings: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color(0xFFF7F9FE),
-        Color(0xFFEFF4FC),
-        Color(0xFFF5F7FB),
+        Color(0xFFF7F8FB),
+        Color(0xFFF3F4F6),
+        Color(0xFFF7F8FB),
       ],
     ),
     dialogBackdrop: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0x66FFFFFF), // backgroundOverlay
-        Color(0x99EFF4FC),
+        Color(0x66FFFFFF),
+        Color(0x99F3F4F6),
       ],
     ),
     premium: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF2F6BFF), Color(0xFFB96CFF)],
+      colors: [Color(0xFF0A84FF), Color(0xFF7C5CFF)],
     ),
     error: LinearGradient(
       colors: [Color(0xFFFFF1EF), Color(0xFFFFE2DE)],
@@ -100,9 +100,9 @@ class AppGradients extends ThemeExtension<AppGradients> {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0xFF0F1724),
-        Color(0xFF121A2A),
-        Color(0xFF0F1724),
+        Color(0xFF070A0F),
+        Color(0xFF0D1117),
+        Color(0xFF070A0F),
       ],
       stops: [0, 0.5, 1],
     ),
@@ -110,47 +110,47 @@ class AppGradients extends ThemeExtension<AppGradients> {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0xFF121A2A),
-        Color(0xFF0F1724),
-        Color(0xFF121A2A),
+        Color(0xFF151A23),
+        Color(0xFF070A0F),
+        Color(0xFF0D1117),
       ],
     ),
     auth: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color(0xFF0F1724),
-        Color(0xFF121A2A),
-        Color(0xFF141E30),
+        Color(0xFF070A0F),
+        Color(0xFF0D1117),
+        Color(0xFF151A23),
       ],
     ),
     home: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color(0xFF0F1724),
-        Color(0xFF121E2E),
-        Color(0xFF121A2A),
+        Color(0xFF070A0F),
+        Color(0xFF0D1117),
+        Color(0xFF151A23),
       ],
     ),
     settings: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Color(0xFF0F1724),
-        Color(0xFF121A2A),
-        Color(0xFF101A28),
+        Color(0xFF070A0F),
+        Color(0xFF0D1117),
+        Color(0xFF10151D),
       ],
     ),
     dialogBackdrop: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Color(0x660A1020), Color(0x99121A2A)],
+      colors: [Color(0x66070A0F), Color(0x990D1117)],
     ),
     premium: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFAEC4FF), Color(0xFFE9D5FF)],
+      colors: [Color(0xFF2997FF), Color(0xFF9B8CFF)],
     ),
     error: LinearGradient(colors: [Color(0xFF3F0806), Color(0xFF5F1612)]),
     success: LinearGradient(colors: [Color(0xFF052E16), Color(0xFF123B25)]),
