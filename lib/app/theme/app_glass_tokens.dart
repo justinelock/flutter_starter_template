@@ -150,29 +150,32 @@ class AppGlassTokens extends ThemeExtension<AppGlassTokens> {
     glassDisabledOpacity: 0.36,
   );
 
-  /// 页面级玻璃：中等模糊 + 插件默认折射参数。
+  /// 页面级玻璃：中等模糊，关闭按压/拖拽时的着色光晕（glowIntensity）。
   LiquidGlassSettings get pageSettings => LiquidGlassSettings(
     thickness: GlassDefaults.thickness,
     blur: blurMedium / 5,
     refractiveIndex: GlassDefaults.refractiveIndex,
     lightIntensity: GlassDefaults.lightIntensity,
-    chromaticAberration: GlassDefaults.chromaticAberration,
+    chromaticAberration: 0,
+    glowIntensity: 0,
     glassColor: glassTint,
   );
 
-  /// 卡片 / 表单级玻璃：较小模糊，描边与填充来自 token。
+  /// 卡片 / 表单级玻璃：较小模糊，无彩色光晕。
   LiquidGlassSettings get surfaceSettings => LiquidGlassSettings(
     thickness: 24,
     blur: blurSmall / 5,
     refractiveIndex: 1.15,
+    glowIntensity: 0,
     glassColor: glassBackground,
   );
 
-  /// 底栏 [GlassTabBar] 使用较强模糊以突出浮层感。
+  /// 底栏 [GlassTabBar]：保留形变反馈，关闭触摸方向性彩色光晕。
   LiquidGlassSettings get barSettings => LiquidGlassSettings(
     thickness: 24,
     blur: blurMedium / 5,
     refractiveIndex: 1.15,
+    glowIntensity: 0,
     glassColor: glassBackgroundStrong,
   );
 

@@ -23,6 +23,7 @@ class AppGlassIconButton extends StatelessWidget {
       onPressed: onPressed,
       shape: shape,
       borderRadius: AppRadius.button,
+      glowColor: Colors.transparent,
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-import '../../../../app/design/app_radius.dart';
 import '../../../../app/design/app_spacing.dart';
+import '../../../../app/theme/theme_extensions.dart';
 
-/// 认证表单输入框：占位符即标签，校验错误单独展示；文字对比度跟随 ColorScheme。
+/// 认证表单输入框：占位符即标签，校验错误单独展示；触摸无彩色光晕。
 class AuthTextField extends StatelessWidget {
   const AuthTextField({
     required this.controller,
@@ -22,6 +22,7 @@ class AuthTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final glass = context.glass;
     // 占位符用 onSurfaceVariant，输入正文用 onSurface，避免玻璃输入框里发灰看不清。
     final placeholderStyle = TextStyle(
       fontSize: 15,
@@ -43,6 +44,9 @@ class AuthTextField extends StatelessWidget {
                 placeholderStyle: placeholderStyle,
                 textStyle: textStyle,
                 onChanged: field.didChange,
+                settings: glass.surfaceSettings,
+                interactionBehavior: GlassInteractionBehavior.scaleOnly,
+                glowColor: Colors.transparent,
               )
             : GlassTextField(
                 controller: controller,
@@ -51,6 +55,9 @@ class AuthTextField extends StatelessWidget {
                 textStyle: textStyle,
                 keyboardType: TextInputType.phone,
                 onChanged: field.didChange,
+                settings: glass.surfaceSettings,
+                interactionBehavior: GlassInteractionBehavior.scaleOnly,
+                glowColor: Colors.transparent,
               );
 
         return Column(

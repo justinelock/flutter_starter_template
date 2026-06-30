@@ -3,7 +3,7 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart' as lg;
 
 import '../../app/design/app_radius.dart';
 
-/// 项目统一分段控件，圆角对齐 iOS 26 [AppRadius.control]（16pt）。
+/// 项目统一分段控件：指示器滑动无彩色光晕，圆角对齐 [AppRadius.control]。
 class AppGlassSegmentedControl extends StatelessWidget {
   const AppGlassSegmentedControl({
     required this.segments,
@@ -23,6 +23,9 @@ class AppGlassSegmentedControl extends StatelessWidget {
       selectedIndex: selectedIndex,
       onSegmentSelected: onSegmentSelected,
       borderRadius: AppRadius.control,
+      interactionBehavior: lg.GlassInteractionBehavior.scaleOnly,
+      glowColor: Colors.transparent,
+      glowRadius: 0,
     );
   }
 }
