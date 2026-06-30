@@ -1,0 +1,31 @@
+---
+description: Flutter Starter 项目级编码规则：国际化文案与注释要求
+alwaysApply: true
+---
+
+# 项目级编码规则
+
+## 用户可见文案
+
+- 所有用户可见文案必须通过 `LocaleKeys` 国际化访问，禁止在 Widget、Controller、Service、Dialog、SnackBar、Toast、错误提示、按钮、标题、表单校验提示中硬编码中文。
+- 新增文案时，必须同步维护对应的国际化资源，并确保中文和英文都有可用条目。
+- 如果临时调试文案不会展示给最终用户，也需要明确限制在 debug-only 分支中，不能进入生产可见路径。
+
+## 注释要求
+
+- 新增或修改代码时，必须补充清晰注释，说明关键步骤、业务意图、状态流转、错误处理和跨平台差异。
+- 注释要尽量做到步骤级别，方便后续阅读代码时理解执行顺序和设计原因。
+- 不得擅自删除原有注释。只有在注释已经明显错误、过期或与代码不一致时，才可以更新注释，并保留原注释表达的有效上下文。
+- 注释应解释“为什么这样做”和“这一步负责什么”，避免只复述代码表面行为。
+
+## 圆角（iOS 26）
+
+- 所有 UI 圆角必须来自 `lib/app/design/app_radius.dart` 的语义 token，禁止在 Widget 内硬编码圆角数值。
+- 新增玻璃组件时优先封装为 `AppGlass*`（如 `AppGlassCard`、`AppGlassButton`），在封装层传入对应 `AppRadius` 常量。
+- 圆角取值对齐 iOS 26 / `liquid_glass_widgets` 默认值：输入 10、列表/按钮 12、分段/容器 16、卡片 20、Tab 32、主操作按钮用 `AppRadius.capsule(height)`。
+
+## 圆角（iOS 26）
+
+- 所有 UI 圆角必须来自 `lib/app/design/app_radius.dart` 的语义 token，禁止在 Widget 内硬编码圆角数值。
+- 新增玻璃组件时优先封装为 `AppGlass*`（如 `AppGlassCard`、`AppGlassButton`），在封装层传入对应 `AppRadius` 常量。
+- 圆角取值对齐 iOS 26 / `liquid_glass_widgets` 默认值：输入 10、列表/按钮 12、分段/容器 16、卡片 20、Tab 32、主操作按钮用 `AppRadius.capsule(height)`。

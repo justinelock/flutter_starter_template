@@ -1,0 +1,19 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+    # 第三方 liquid_glass_widgets 源码不属于本项目模板源码，避免依赖示例 warning 影响项目 analyze。
+    - 'liquid_glass_widgets/**'
+
+linter:
+  rules:
+    always_declare_return_types: true
+    avoid_dynamic_calls: true
+    avoid_print: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    require_trailing_commas: true
+    sort_child_properties_last: true
+    unawaited_futures: true
