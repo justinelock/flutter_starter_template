@@ -20,7 +20,8 @@ Fork 本仓库并开始新产品开发前，请按顺序完成以下步骤。完
 
 | 项 | 位置 | 说明 |
 |----|------|------|
-| API 根地址 | `lib/app/environment/env_config.dart` → `baseUrl` | Debug / Prod 分别配置 |
+| API 主机 | `lib/app/environment/env_config.dart` → `baseUrl` | 仅域名或 `IP:端口`，如 `https://api.example.com`、`http://192.168.1.10:8091` |
+| API 前缀 | 同上 → `apiPrefix` | 如 `/api/v1`；Dio 实际根地址为 `apiBaseUrl`（自动拼接） |
 | Mock 开关 | 同上 → `enableMock` | **Debug 默认 `true`（本地 Mock）**；**Prod 必须为 `false`** |
 | 版本检查路径 | `versionCheckUrl` | 默认 `/app/versions/latest` |
 | Dart Define | 构建命令 `--dart-define=APP_ENV=prod` | CI 与商店包务必使用 `prod` |
@@ -31,7 +32,7 @@ flutter run --dart-define=APP_ENV=debug
 
 # 对接真实后端
 # 1. 将 enableMock 设为 false（或仅在 prod 为 false）
-# 2. 配置 baseUrl
+# 2. 配置 baseUrl（主机）与 apiPrefix（如 /api/v1）
 flutter run --dart-define=APP_ENV=debug
 ```
 

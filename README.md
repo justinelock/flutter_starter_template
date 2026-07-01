@@ -51,7 +51,7 @@ flutter build linux --dart-define=APP_ENV=prod
 
 Debug defaults to **mock services** (`EnvConfig.enableMock`) and verbose logs. Prod disables mock, minimizes logs, and sanitizes sensitive fields such as password, token, authorization, and cookie.
 
-To call a real API in debug, set `enableMock: false` in `lib/app/environment/env_config.dart` and configure `baseUrl`.
+To call a real API in debug, set `enableMock: false` in `lib/app/environment/env_config.dart` and configure `baseUrl` (host) and `apiPrefix` (e.g. `/api/v1`).
 
 ## Development
 
@@ -72,7 +72,7 @@ In debug with `enableMock: true`, any valid **email** and password with at least
 
 ## API Integration
 
-Default remote auth uses email/password JSON (`RemoteAuthService`). For mobile-ID or custom backends, see `ExampleBackendAuthService` and [docs/TEMPLATE_CHECKLIST.md](docs/TEMPLATE_CHECKLIST.md). Replace `baseUrl` in `EnvConfig` and adjust parsing in the service layer. UI must not call dio directly.
+Default remote auth uses email/password JSON (`RemoteAuthService`). For mobile-ID or custom backends, see `ExampleBackendAuthService` and [docs/TEMPLATE_CHECKLIST.md](docs/TEMPLATE_CHECKLIST.md). Replace `baseUrl` and `apiPrefix` in `EnvConfig`; adjust parsing in the service layer. UI must not call dio directly.
 
 ## Crash And Analytics
 

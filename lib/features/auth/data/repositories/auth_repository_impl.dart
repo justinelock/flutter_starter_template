@@ -31,7 +31,7 @@ final authServiceProvider = Provider<AuthService>((ref) {
     return MockAuthService();
   }
 
-  logger.info('Auth service selected: remote ${env.baseUrl}');
+  logger.info('Auth service selected: remote ${env.apiBaseUrl}');
   return RemoteAuthService(ref.watch(apiClientProvider));
 }, name: 'authServiceProvider');
 

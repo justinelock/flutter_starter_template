@@ -186,7 +186,7 @@ flowchart TD
 |------|------|
 | 为什么没配 API 也能登录？ | Debug 默认 `enableMock: true`，走 `MockAuthService` |
 | Mock 开关在哪？ | `lib/app/environment/env_config.dart` → `enableMock` |
-| 怎么连真后端？ | 设 `enableMock: false`，配置 `baseUrl`，见下文 §11 |
+| 怎么连真后端？ | 设 `enableMock: false`，配置 `baseUrl` + `apiPrefix`，见下文 §11 |
 | Prod 包会用 Mock 吗？ | 不会，`APP_ENV=prod` 时 `enableMock: false` |
 
 Mock 行为摘要：
@@ -378,8 +378,9 @@ GoRoute(
 ### 11.2 切换 Remote
 
 1. 打开 `lib/app/environment/env_config.dart`
-2. 设置 `baseUrl` 为你的 API 根路径
-3. 在 Debug 下临时设 `enableMock: false`（或仅用 `APP_ENV=prod` 构建验证）
+2. 设置 `baseUrl`（主机，如 `https://api.example.com` 或 `http://192.168.254.127:8091`）
+3. 设置 `apiPrefix`（如 `/api/v1`）；Dio 会自动使用 `apiBaseUrl = baseUrl + apiPrefix`
+4. 在 Debug 下临时设 `enableMock: false`（或仅用 `APP_ENV=prod` 构建验证）
 
 默认 `RemoteAuthService` 约定：
 
@@ -515,7 +516,7 @@ flutter test
 
 | 我想… | 去这个文件 |
 |--------|------------|
-| 改 API 地址 / Mock | `lib/app/environment/env_config.dart` |
+| 改 API 主机 / 前缀 / Mock | `lib/app/environment/env_config.dart` → `baseUrl`、`apiPrefix` |
 | 改路由 | `lib/app/router/app_router.dart` |
 | 改登录逻辑 | `lib/features/auth/presentation/controllers/auth_controller.dart` |
 | 改登录 UI | `lib/features/auth/presentation/pages/login_page.dart` |

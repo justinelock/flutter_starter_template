@@ -59,7 +59,7 @@ lib/
 
 | 子目录 | 职责 | 代表文件 |
 |--------|------|----------|
-| `environment/` | `APP_ENV`、baseUrl、Mock 开关、Feature Flags | `env_config.dart`, `feature_flags.dart` |
+| `environment/` | `APP_ENV`、`baseUrl`、`apiPrefix`、Mock、Feature Flags | `env_config.dart`, `feature_flags.dart` |
 | `router/` | 路由表、认证重定向、Tab Shell | `app_router.dart`, `app_routes.dart`, `main_tab_shell.dart` |
 | `theme/` | Material 主题、玻璃主题、ThemeExtension | `app_theme.dart`, `app_typography_tokens.dart` |
 | `design/` | 间距、圆角、断点、动效等设计 Token | `app_spacing.dart`, `app_radius.dart` |
@@ -332,7 +332,18 @@ flutter run --dart-define=APP_ENV=prod
 解析：`lib/app/environment/app_environment.dart`  
 聚合配置：`lib/app/environment/env_config.dart` → `EnvConfig.current()`
 
-### 8.2 Debug vs Prod 行为
+### 8.2 API 地址结构（主机 + 前缀）
+
+| 配置项 | 示例 | 说明 |
+|--------|------|------|
+| `baseUrl` | `https://api.example.com` | 仅主机，Debug 可为 `http://192.168.x.x:8091` |
+| `apiPrefix` | `/api/v1` | API 网关/版本前缀 |
+| `apiBaseUrl`（只读） | `https://api.example.com/api/v1` | `ApiClient` 使用的 Dio 根地址 |
+| Service `path` | `/auth/login` | 相对 `apiBaseUrl` 的业务路径 |
+
+换环境只改 `baseUrl`；升级 API 版本只改 `apiPrefix`。拼接逻辑集中在 `EnvConfig.joinApiBaseUrl`。
+
+### 8.3 Debug vs Prod 行为
 
 | 配置 | Debug | Prod |
 |------|-------|------|
@@ -342,7 +353,7 @@ flutter run --dart-define=APP_ENV=prod
 | Branding 远端请求 | 跳过 | 发起请求 |
 | `enableDebugPanel` | 设置页可见 Feature Flags | 关闭 |
 
-### 8.3 Mock 切换点（单一开关 `enableMock`）
+### 8.4 Mock 切换点（单一开关 `enableMock`）
 
 | 模块 | 文件 | 行为 |
 |------|------|------|
@@ -350,7 +361,7 @@ flutter run --dart-define=APP_ENV=prod
 | Version | `version_repository_impl.dart` | Mock → `MockVersionService`（默认无更新） |
 | Branding | `splash_controller.dart` | Mock 时直接 return |
 
-对接真实 API：将 `enableMock` 设为 `false` 并配置 `baseUrl`。非通用后端可参考 `example_backend_auth_service.dart`。
+对接真实 API：将 `enableMock` 设为 `false`，配置 `baseUrl`（主机）与 `apiPrefix`（如 `/api/v1`）。非通用后端可参考 `example_backend_auth_service.dart`。
 
 ---
 
@@ -421,7 +432,7 @@ features/.../pages   # 业务页面（禁止硬编码圆角/字号）
 
 ### 11.1 网络
 
-- `ApiClient`：基于 Dio，baseUrl 来自 `envConfigProvider`
+- `ApiClient`：Dio 的 `baseUrl` 使用 `EnvConfig.apiBaseUrl`（`baseUrl` + `apiPrefix` 拼接）
 - `ApiInterceptor`：Debug 请求/响应日志 + 脱敏（**尚未**注入 Token / 处理 401）
 - 约定：UI 与 Controller **不得**直接使用 Dio
 
