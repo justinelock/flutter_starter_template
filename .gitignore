@@ -44,3 +44,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 liquid_glass_widgets/
+dist/
+web/download/*.apk

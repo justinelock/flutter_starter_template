@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="description" content="Flutter template App 官方下载" id="meta-description">
+  <title>Flutter template App 下载</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    /* 设计基准：iPhone 17 Pro 逻辑视口 402 × 874 CSS px */
+    :root {
+      --phone-width: 402px;
+      --phone-height: 874px;
+      --brand: #007aff;
+      --brand-dark: #0062cc;
+      --bg-top: #e8f2ff;
+      --bg-bottom: #f2f2f7;
+      --text: #1c1c1e;
+      --text-secondary: #6e6e73;
+      --text-muted: #8e8e93;
+      --card: #ffffff;
+      --border: rgba(0, 0, 0, 0.06);
+      --shadow: 0 24px 60px rgba(0, 40, 120, 0.12);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(160deg, #dbeafe 0%, #f2f2f7 42%, #eef2ff 100%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px 12px calc(16px + var(--safe-bottom));
+    }
+
+    /* 大屏居中展示手机画幅；小屏铺满 */
+    .phone-shell {
+      width: 100%;
+      max-width: var(--phone-width);
+      min-height: min(var(--phone-height), 100dvh);
+      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 38%, #ffffff 100%);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 430px) {
+      body {
+        padding: 0;
+        background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 38%, #ffffff 100%);
+      }
+
+      .phone-shell {
+        max-width: none;
+        min-height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    .status-spacer {
+      height: calc(12px + var(--safe-top));
+      flex-shrink: 0;
+    }
+
+    .page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0 24px 24px;
+    }
+
+    /* 顶部品牌区 */
+    .hero {
+      text-align: center;
+      padding: 8px 0 20px;
+    }
+
+    .logo-wrap {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 16px;
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: 0 10px 30px rgba(0, 122, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-wrap img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+    }
+
+    .app-name {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    .app-tagline {
+      margin: 8px 0 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .version-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(0, 122, 255, 0.1);
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .version-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    /* 更新说明卡片 */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 18px 18px 16px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-body {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .skeleton-line {
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #eceff3 25%, #f7f8fa 50%, #eceff3 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      margin-bottom: 10px;
+    }
+
+    .skeleton-line:last-child {
+      width: 72%;
+      margin-bottom: 0;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* 下载按钮：iOS / Android 并排一行 */
+    .actions {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .btn-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .btn-download {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      width: 100%;
+      min-height: 52px;
+      padding: 8px 6px;
+      border: none;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-download:active {
+      transform: scale(0.98);
+    }
+
+    .btn-download:disabled,
+    .btn-download.is-disabled {
+      opacity: 0.45;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    .btn-ios {
+      background: linear-gradient(135deg, #1c1c1e 0%, #3a3a3c 100%);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(28, 28, 30, 0.18);
+    }
+
+    .btn-android {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+      color: #ffffff;
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.22);
+    }
+
+    .btn-download .icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .btn-download .label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .btn-download .label small {
+      display: none;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0 0 16px;
+    }
+
+    /* 特性列表 */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: auto;
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    .feature .emoji {
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .feature .name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* 错误态 */
+    .error-box {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 59, 48, 0.08);
+      color: #c41e14;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .error-box.show {
+      display: block;
+    }
+
+    .retry-link {
+      display: inline-block;
+      margin-top: 6px;
+      color: var(--brand);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .recommended-badge {
+      display: none;
+      position: absolute;
+      top: -6px;
+      right: -4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #ff9f0a;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .btn-wrap.is-recommended .recommended-badge {
+      display: block;
+    }
+
+    /* 右上角语言切换 */
+    .lang-switch {
+      position: absolute;
+      top: calc(10px + var(--safe-top));
+      right: 14px;
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--text-secondary);
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 40, 120, 0.08);
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    .lang-switch:hover {
+      color: var(--brand);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .lang-switch:active {
+      transform: scale(0.96);
+    }
+
+    .lang-switch svg {
+      width: 22px;
+      height: 22px;
+      pointer-events: none;
+    }
+
+    .lang-switch .lang-code {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--brand);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-shell">
+    <button type="button" class="lang-switch" id="lang-switch" aria-label="切换语言">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M3 12h18M12 3c2.8 3.1 2.8 14.9 0 18M12 3c-2.8 3.1-2.8 14.9 0 18"></path>
+      </svg>
+      <span class="lang-code" id="lang-code">EN</span>
+    </button>
+    <div class="status-spacer"></div>
+    <div class="page">
+      <header class="hero">
+        <div class="logo-wrap">
+          <img src="icons/Icon-192.png" width="72" height="72" alt="Flutter template" id="logo-alt" data-i18n-attr="alt:logoAlt">
+        </div>
+        <h1 class="app-name" data-i18n="appName">Flutter template</h1>
+        <p class="app-tagline" data-i18n="appTagline">安全稳健 · 一站式管理平台</p>
+        <div class="version-pill" id="version-pill" hidden>
+          <span class="dot"></span>
+          <span id="version-text">v—</span>
+        </div>
+      </header>
+
+      <div class="error-box" id="error-box">
+        <span id="error-text" data-i18n="errorDefault">版本信息加载失败，请稍后重试。</span>
+        <a class="retry-link" href="javascript:void(0)" id="retry-btn" data-i18n="retry">点击重试</a>
+      </div>
+
+      <section class="card" id="desc-card">
+        <h2 class="card-title" data-i18n="releaseNotes">更新说明</h2>
+        <div id="desc-loading">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+        </div>
+        <p class="card-body" id="desc-text" hidden></p>
+      </section>
+
+      <section class="actions">
+        <div class="btn-wrap" id="ios-wrap">
+          <span class="recommended-badge" data-i18n="recommended">推荐</span>
+          <a class="btn-download btn-ios is-disabled" id="btn-ios" href="#" rel="noopener" aria-disabled="true">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M16.365 1.43c.06.78-.233 1.558-.713 2.183-.48.625-1.253 1.09-2.05 1.02-.07-.76.26-1.56.73-2.12.47-.56 1.29-.99 2.03-1.08zm2.54 4.13c-1.77-.1-3.27 1.01-4.11 1.01-.85 0-2.16-.99-3.56-.96-1.83.03-3.51 1.06-4.45 2.7-1.9 3.29-.49 8.16 1.36 10.84.9 1.3 1.97 2.76 3.38 2.71 1.36-.05 1.87-.88 3.51-.88 1.64 0 2.08.88 3.5.85 1.45-.03 2.37-1.32 3.26-2.63 1.03-1.5 1.45-2.96 1.47-3.03-.03-.01-2.83-1.09-2.86-4.32-.03-2.71 2.2-4.01 2.31-4.08-1.26-1.84-3.22-2.08-3.91-2.12z"/>
+            </svg>
+            <span class="label">
+              <small data-i18n="btnIosSmall">App Store / 企业签</small>
+              <span data-i18n="btnIosLabel">iPhone 下载</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="btn-wrap" id="android-wrap">
+          <span class="recommended-badge" data-i18n="recommended">推荐</span>
+          <a class="btn-download btn-android is-disabled" id="btn-android" href="#" rel="noopener" aria-disabled="true">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.3 1.3C6.58 3.13 5 5.55 5 8.5h14c0-2.95-1.58-5.37-4.47-6.34z"/>
+            </svg>
+            <span class="label">
+              <small data-i18n="btnAndroidSmall">Android APK</small>
+              <span data-i18n="btnAndroidLabel">Android 下载</span>
+            </span>
+          </a>
+        </div>
+      </section>
+
+      <p class="hint" id="platform-hint" data-i18n="loadingVersion">正在获取最新版本…</p>
+
+      <section class="features" id="features-section" aria-label="产品亮点">
+        <div class="feature">
+          <div class="emoji">🔒</div>
+          <div class="name" data-i18n-html="feature1">银行级<br>安全保障</div>
+        </div>
+        <div class="feature">
+          <div class="emoji">📈</div>
+          <div class="name" data-i18n-html="feature2">多元投资<br>一站管理</div>
+        </div>
+        <div class="feature">
+          <div class="emoji">💬</div>
+          <div class="name" data-i18n-html="feature3">7×24<br>在线客服</div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div data-i18n="footerLine1">© Flutter template · 官方客户端下载页</div>
+        <div data-i18n="footerLine2">请通过官方渠道安装，谨防仿冒应用</div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="download.js"></script>
+</body>
+</html>
