@@ -225,4 +225,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get initializing => 'Initializing...';
+
+  @override
+  String get homeWelcomeTitle => 'Welcome';
+
+  @override
+  String get homeWelcomeSubtitle =>
+      'Replace this screen with your product home after forking the template.';
+
+  @override
+  String get homeGettingStartedHint =>
+      'See docs/TEMPLATE_CHECKLIST.md for the required setup steps.';
 }

@@ -15,7 +15,7 @@ class MockVersionService implements VersionService {
     await Future<void>.delayed(const Duration(milliseconds: 250));
     return VersionInfoModel(
       currentVersion: currentVersion,
-      latestVersion: forceUpdate ? '2.0.0' : '1.5.6',
+      latestVersion: forceUpdate ? '2.0.0' : currentVersion,
       buildNumber: buildNumber,
       forceUpdate: forceUpdate,
       title: forceUpdate ? 'Required update' : 'Update available',

@@ -1,23 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/environment/env_provider.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../version/presentation/controllers/update_gate_controller.dart';
 import '../../../version/presentation/controllers/version_controller.dart';
 import '../../data/services/branding_service.dart';
 
-const _minimumSplashDuration = Duration(seconds: 2);
-
-final appBootstrapProvider = AsyncNotifierProvider<SplashController, void>(
-  SplashController.new,
-  name: 'appBootstrapProvider',
+/// 启动页最短展示时长；测试可通过 override 设为 [Duration.zero]。
+final splashMinimumDurationProvider = Provider<Duration>(
+  (ref) => const Duration(seconds: 2),
+  name: 'splashMinimumDurationProvider',
 );
 
 class SplashController extends AsyncNotifier<void> {
   @override
   Future<void> build() async {
-    // 步骤 1：启动页至少展示一小段时间，避免初始化过快时用户看不到品牌 Splash。
-    final minimumVisibleFuture = Future<void>.delayed(_minimumSplashDuration);
+    final minimumVisibleFuture = Future<void>.delayed(
+      ref.read(splashMinimumDurationProvider),
+    );
 
     // 步骤 2：并行执行启动恢复流程，让 UI 展示时间和实际初始化时间取较长者。
     final bootstrapFuture = _runBootstrapTasks();
@@ -61,6 +62,10 @@ class SplashController extends AsyncNotifier<void> {
   }
 
   Future<void> _loadBranding() async {
+    final env = ref.read(envConfigProvider);
+    // mock 环境不请求远端品牌配置，避免未配置 API 时启动阶段产生无意义网络错误。
+    if (env.enableMock) return;
+
     try {
       await ref.read(brandingServiceProvider).fetch();
     } catch (error, stackTrace) {
@@ -75,3 +80,8 @@ class SplashController extends AsyncNotifier<void> {
     }
   }
 }
+
+final appBootstrapProvider = AsyncNotifierProvider<SplashController, void>(
+  SplashController.new,
+  name: 'appBootstrapProvider',
+);

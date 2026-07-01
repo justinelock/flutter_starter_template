@@ -22,18 +22,19 @@ class EnvConfig {
     return EnvConfig(
       appName: isProd ? 'Starter' : 'Starter Debug',
       environment: env,
+      // fork 后替换为你的 API 根路径；debug 与 prod 可指向不同域名。
       baseUrl: isProd
           ? 'https://api.example.com/api/v1'
-          : 'http://192.168.254.127:8091/api/v1',
+          : 'https://api.example.com/api/v1',
       enableLog: !isProd,
       enableVerboseLog: !isProd,
+      // debug 默认 mock，避免未配置后端时启动即失败；prod 走远程服务。
       enableMock: !isProd,
       enableCrashReport: isProd,
       enableAnalytics: isProd,
       enableNetworkMonitor: true,
       versionCheckUrl: '/app/versions/latest',
       featureFlags: FeatureFlags(
-        enableMockLogin: false,
         enableVersionCheck: true,
         enableCrashReport: isProd,
         enableAnalytics: isProd,

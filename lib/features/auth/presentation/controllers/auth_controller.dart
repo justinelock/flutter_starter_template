@@ -70,13 +70,12 @@ class AuthController extends Notifier<AuthState> {
         : AuthState(status: AuthStatus.authenticated, user: user);
   }
 
-  Future<bool> login(String mobile, String password) async {
+  Future<bool> login(String email, String password) async {
     state = state.copyWith(loading: true);
     try {
-      // 步骤 1：登录参数使用真实接口 mobile/password，Controller 只负责状态流转。
       final user = await ref
           .read(authRepositoryProvider)
-          .login(mobile: mobile, password: password);
+          .login(email: email, password: password);
       state = AuthState(status: AuthStatus.authenticated, user: user);
       return true;
     } on RepositoryFailure catch (error) {
@@ -89,23 +88,16 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<bool> register({
-    required String username,
+    required String email,
     required String password,
-    required String realName,
-    required String idCard,
-    required String inviteCode,
+    String? displayName,
   }) async {
     state = state.copyWith(loading: true);
     try {
-      // 步骤 1：注册参数直接映射真实 UserRegisterReq，后续由 Repository 处理存储。
-      final user = await ref
-          .read(authRepositoryProvider)
-          .register(
-            username: username,
+      final user = await ref.read(authRepositoryProvider).register(
+            email: email,
             password: password,
-            realName: realName,
-            idCard: idCard,
-            inviteCode: inviteCode,
+            displayName: displayName,
           );
       state = AuthState(status: AuthStatus.authenticated, user: user);
       return true;

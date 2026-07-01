@@ -4,6 +4,7 @@ import '../models/auth_token_model.dart';
 import '../models/user_model.dart';
 import 'auth_service.dart';
 
+/// 通用远程认证：默认对接 email/password REST，fork 后按后端契约调整路径与解析。
 class RemoteAuthService implements AuthService {
   const RemoteAuthService(this._apiClient);
 
@@ -11,60 +12,68 @@ class RemoteAuthService implements AuthService {
 
   @override
   Future<AuthResult> login({
-    required String mobile,
+    required String email,
     required String password,
   }) async {
-    // 步骤 1：按真实接口 UserLoginReq 字段提交 mobile/password。
     final response = await _apiClient.post(
       '/auth/login',
-      data: {'mobile': mobile, 'password': password},
+      data: {'email': email, 'password': password},
     );
-
-    // 步骤 2：接口约定 code=0 表示成功，其他情况交给统一错误体系处理。
-    final json = response.data;
-    if (json is! Map || json['code'] != 0) {
-      throw AuthException(
-        json is Map
-            ? json['msg']?.toString() ?? 'Login failed'
-            : 'Login failed',
-      );
-    }
-    final data = Map<String, dynamic>.from(json['data'] as Map);
-    return AuthResult(
-      user: UserModel.fromEmail(mobile),
-      token: AuthTokenModel.fromJson(data),
-    );
+    return _parseAuthResult(response.data, fallbackEmail: email);
   }
 
   @override
   Future<AuthResult> register({
-    required String username,
+    required String email,
     required String password,
-    required String realName,
-    required String idCard,
-    required String inviteCode,
+    String? displayName,
   }) async {
-    // 步骤 1：按真实接口 UserRegisterReq 字段提交注册资料。
     final response = await _apiClient.post(
       '/auth/register',
       data: {
-        'username': username,
+        'email': email,
         'password': password,
-        'realName': realName,
-        'idCard': idCard,
-        'inviteCode': inviteCode,
+        if (displayName != null && displayName.trim().isNotEmpty)
+          'displayName': displayName.trim(),
       },
     );
 
-    // 步骤 2：注册成功后复用登录接口换取 token，保持后续存储流程一致。
-    final json = response.data;
-    if (json is! Map || json['code'] != 0) {
-      throw AuthException(
-        json is Map
-            ? json['msg']?.toString() ?? 'Register failed'
-            : 'Register failed',
-      );
+    try {
+      return _parseAuthResult(response.data, fallbackEmail: email);
+    } on AuthException {
+      // 部分后端注册接口不返回 token，注册成功后复用登录换取会话。
+      return login(email: email, password: password);
     }
-    return login(mobile: username, password: password);
+  }
+
+  AuthResult _parseAuthResult(
+    dynamic json, {
+    required String fallbackEmail,
+  }) {
+    if (json is! Map) {
+      throw const AuthException('Invalid auth response');
+    }
+
+    // 兼容 { code, data, msg } 与扁平 JSON 两种常见后端格式。
+    if (json.containsKey('code')) {
+      if (json['code'] != 0) {
+        throw AuthException(json['msg']?.toString() ?? 'Auth request failed');
+      }
+      json = json['data'];
+    }
+
+    if (json is! Map) {
+      throw const AuthException('Invalid auth response');
+    }
+
+    final data = Map<String, dynamic>.from(json);
+    final userJson = data['user'] is Map
+        ? Map<String, dynamic>.from(data['user'] as Map)
+        : <String, dynamic>{'email': fallbackEmail};
+
+    return AuthResult(
+      user: UserModel.fromJson(userJson, fallbackEmail: fallbackEmail),
+      token: AuthTokenModel.fromJson(data),
+    );
   }
 }

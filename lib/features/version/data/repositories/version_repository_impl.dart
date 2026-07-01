@@ -14,13 +14,14 @@ import '../services/version_service.dart';
 final versionServiceProvider = Provider<VersionService>((ref) {
   final env = ref.watch(envConfigProvider);
   final logger = ref.watch(appLoggerProvider);
-  if (env.featureFlags.enableForceUpdateMock) {
-    // 只有显式开启强制更新 mock 时才使用 mock 版本服务，便于启动阶段真实检查版本接口。
-    logger.info('Version service selected: mock force update');
+
+  if (env.enableMock) {
+    logger.info('Version service selected: mock');
     return MockVersionService(
       forceUpdate: env.featureFlags.enableForceUpdateMock,
     );
   }
+
   logger.info('Version service selected: remote ${env.versionCheckUrl}');
   return RemoteVersionService(
     apiClient: ref.watch(apiClientProvider),
@@ -42,9 +43,7 @@ class VersionRepositoryImpl implements VersionRepository {
   Future<VersionInfo> checkLatest() async {
     final packageInfo = await _ref.read(packageInfoProvider.future);
     final platform = _ref.read(platformNameProvider);
-    return _ref
-        .read(versionServiceProvider)
-        .latest(
+    return _ref.read(versionServiceProvider).latest(
           currentVersion: packageInfo.version,
           buildNumber: packageInfo.buildNumber,
           platform: platform,

@@ -523,6 +523,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Initializing...'**
   String get initializing;
+
+  /// No description provided for @homeWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get homeWelcomeTitle;
+
+  /// No description provided for @homeWelcomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace this screen with your product home after forking the template.'**
+  String get homeWelcomeSubtitle;
+
+  /// No description provided for @homeGettingStartedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'See docs/TEMPLATE_CHECKLIST.md for the required setup steps.'**
+  String get homeGettingStartedHint;
 }
 
 class _AppLocalizationsDelegate

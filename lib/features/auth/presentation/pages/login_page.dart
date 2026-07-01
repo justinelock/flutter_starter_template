@@ -10,6 +10,7 @@ import '../../../../app/theme/theme_extensions.dart';
 import '../../../../app/theme/typography_extensions.dart';
 import '../../../../core/messaging/app_messenger.dart';
 import '../../../../core/messaging/app_snackbar.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../../../core/widgets/glass_scaffold.dart';
 import '../../../../shared/widgets/app_logo.dart';
@@ -27,30 +28,25 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _mobile = TextEditingController();
-  final _password = TextEditingController(text: 'password');
+  final _email = TextEditingController();
+  final _password = TextEditingController();
 
   @override
   void dispose() {
-    _mobile.dispose();
+    _email.dispose();
     _password.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
-    // 步骤 1：先触发表单校验，避免无效输入进入认证流程。
     if (!_formKey.currentState!.validate()) return;
 
-    // 步骤 2：校验通过后只向 Controller 传递业务数据，页面不直接处理登录细节。
     final success = await ref
         .read(authControllerProvider.notifier)
-        .login(_mobile.text.trim(), _password.text);
+        .login(_email.text.trim(), _password.text);
     if (!mounted) return;
 
-    // 步骤 3：认证结果通过全局消息服务提示，保持不同页面的 SnackBar 样式一致。
-    ref
-        .read(appMessengerProvider)
-        .show(
+    ref.read(appMessengerProvider).show(
           success ? context.l10n.loginSuccess : context.l10n.loginFailed,
           type: success ? AppSnackBarType.success : AppSnackBarType.error,
         );
@@ -61,7 +57,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final auth = ref.watch(authControllerProvider);
     final l10n = context.l10n;
 
-    // 布局参考：Logo 独立浮在登录卡片上方，表单与主操作收纳在玻璃卡片内。
     return AppGlassScaffold(
       backgroundGradient: context.gradients.auth,
       body: PageContainer(
@@ -84,13 +79,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         AuthTextField(
-                          controller: _mobile,
-                          label: l10n.mobileLabel,
+                          controller: _email,
+                          label: l10n.emailLabel,
+                          keyboardType: TextInputType.emailAddress,
                           validator: (value) {
-                            final mobile = (value ?? '').trim();
-                            return mobile.isEmpty
-                                ? l10n.mobileRequired
-                                : null;
+                            final error = Validators.email(value ?? '');
+                            return error == null
+                                ? null
+                                : _localizedAuthError(error, l10n);
                           },
                         ),
                         const SizedBox(height: AppSpacing.md),
@@ -99,13 +95,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           label: l10n.passwordLabel,
                           obscureText: true,
                           validator: (value) {
-                            final password = value ?? '';
-                            if (password.isEmpty) {
-                              return l10n.passwordRequired;
-                            }
-                            return password.length >= 6
+                            final error = Validators.password(value ?? '');
+                            return error == null
                                 ? null
-                                : l10n.passwordMinLength;
+                                : _localizedAuthError(error, l10n);
                           },
                         ),
                         if (auth.errorMessage != null) ...[

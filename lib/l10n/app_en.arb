@@ -80,5 +80,8 @@
   "retryAction": "Retry",
   "packageInfoLoadFailed": "Unable to load app version",
   "pageNotFound": "Page not found",
-  "initializing": "Initializing..."
+  "initializing": "Initializing...",
+  "homeWelcomeTitle": "Welcome",
+  "homeWelcomeSubtitle": "Replace this screen with your product home after forking the template.",
+  "homeGettingStartedHint": "See docs/TEMPLATE_CHECKLIST.md for the required setup steps."
 }

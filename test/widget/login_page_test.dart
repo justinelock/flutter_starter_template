@@ -34,18 +34,15 @@ void main() {
       ),
     );
 
-    // 步骤 1：确认页面基础文案来自 l10n 并正常渲染。
-    expect(find.text('Mobile'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
     expect(find.text('Login'), findsOneWidget);
 
-    // 步骤 2：留空手机号并输入过短密码，触发表单本地校验。
     await tester.enterText(find.byType(GlassTextField).first, '');
     await tester.enterText(find.byType(GlassPasswordField), '123');
     await tester.tap(find.byType(AppGlassButton));
     await tester.pump();
 
-    // 步骤 3：错误提示应来自 l10n，而不是底层 service 或硬编码中文。
-    expect(find.text('Mobile is required'), findsOneWidget);
+    expect(find.text('Email is required'), findsOneWidget);
     expect(find.text('Password must be at least 6 characters'), findsOneWidget);
   });
 }
@@ -55,18 +52,17 @@ final class _FakeAuthRepository implements AuthRepository {
   Future<User?> restoreUser() async => null;
 
   @override
-  Future<User> login({required String mobile, required String password}) async {
-    return User(id: 'u_1', email: mobile, displayName: mobile);
+  Future<User> login({required String email, required String password}) async {
+    return User(id: 'u_1', email: email, displayName: email.split('@').first);
   }
 
   @override
   Future<User> register({
-    required String username,
+    required String email,
     required String password,
-    required String realName,
-    required String idCard,
-    required String inviteCode,
-  }) => login(mobile: username, password: password);
+    String? displayName,
+  }) =>
+      login(email: email, password: password);
 
   @override
   Future<void> logout() async {}

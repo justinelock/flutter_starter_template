@@ -18,11 +18,13 @@ import '../services/remote_auth_service.dart';
 final authServiceProvider = Provider<AuthService>((ref) {
   final env = ref.watch(envConfigProvider);
   final logger = ref.watch(appLoggerProvider);
-  if (env.featureFlags.enableMockLogin) {
-    // 只有显式开启 mock 登录时才使用本地服务，默认按文档真实 API 对接。
+
+  // debug 默认走 mock（见 EnvConfig.enableMock）；prod 走远程实现。
+  if (env.enableMock) {
     logger.info('Auth service selected: mock');
     return MockAuthService();
   }
+
   logger.info('Auth service selected: remote ${env.baseUrl}');
   return RemoteAuthService(ref.watch(apiClientProvider));
 }, name: 'authServiceProvider');
@@ -38,10 +40,12 @@ final authRepositoryProvider = Provider<AuthRepository>(
 
 class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({
-    required this._service,
-    required this._storage,
-    required this._secureStorage,
-  });
+    required AuthService service,
+    required StorageService storage,
+    required SecureStorageService secureStorage,
+  })  : _service = service,
+        _storage = storage,
+        _secureStorage = secureStorage;
 
   final AuthService _service;
   final StorageService _storage;
@@ -56,15 +60,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User> login({required String mobile, required String password}) async {
+  Future<User> login({required String email, required String password}) async {
     try {
-      // 步骤 1：Repository 不关心 mock/remote 细节，只按真实登录语义传递 mobile/password。
-      final result = await _service.login(mobile: mobile, password: password);
-      await _secureStorage.write(
-        AppStorageKeys.token,
-        result.token.accessToken,
-      );
-      await _storage.setString(AppStorageKeys.userEmail, result.user.email);
+      final result = await _service.login(email: email, password: password);
+      await _persistSession(result);
       return result.user;
     } catch (error) {
       throw RepositoryFailure(ErrorMapper.toFailure(error));
@@ -73,26 +72,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User> register({
-    required String username,
+    required String email,
     required String password,
-    required String realName,
-    required String idCard,
-    required String inviteCode,
+    String? displayName,
   }) async {
     try {
-      // 步骤 1：注册参数严格对应真实 UserRegisterReq，避免页面字段和后端协议脱节。
       final result = await _service.register(
-        username: username,
+        email: email,
         password: password,
-        realName: realName,
-        idCard: idCard,
-        inviteCode: inviteCode,
+        displayName: displayName,
       );
-      await _secureStorage.write(
-        AppStorageKeys.token,
-        result.token.accessToken,
-      );
-      await _storage.setString(AppStorageKeys.userEmail, result.user.email);
+      await _persistSession(result);
       return result.user;
     } catch (error) {
       throw RepositoryFailure(ErrorMapper.toFailure(error));
@@ -103,6 +93,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() async {
     await _secureStorage.delete(AppStorageKeys.token);
     await _storage.remove(AppStorageKeys.userEmail);
+  }
+
+  Future<void> _persistSession(AuthResult result) async {
+    await _secureStorage.write(
+      AppStorageKeys.token,
+      result.token.accessToken,
+    );
+    await _storage.setString(AppStorageKeys.userEmail, result.user.email);
   }
 }
 

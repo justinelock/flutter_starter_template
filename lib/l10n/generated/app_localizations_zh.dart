@@ -224,4 +224,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get initializing => '初始化中...';
+
+  @override
+  String get homeWelcomeTitle => '欢迎使用';
+
+  @override
+  String get homeWelcomeSubtitle => 'Fork 本模版后，请将此页替换为你的产品首页。';
+
+  @override
+  String get homeGettingStartedHint => '请阅读 docs/TEMPLATE_CHECKLIST.md 完成必改项。';
 }

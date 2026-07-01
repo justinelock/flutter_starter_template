@@ -8,13 +8,13 @@ class AuthResult {
   final AuthToken token;
 }
 
+/// 认证服务契约：UI / Controller 不感知 mock 与 remote 的差异。
 abstract interface class AuthService {
-  Future<AuthResult> login({required String mobile, required String password});
+  Future<AuthResult> login({required String email, required String password});
+
   Future<AuthResult> register({
-    required String username,
+    required String email,
     required String password,
-    required String realName,
-    required String idCard,
-    required String inviteCode,
+    String? displayName,
   });
 }

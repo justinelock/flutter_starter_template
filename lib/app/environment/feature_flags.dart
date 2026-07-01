@@ -1,6 +1,5 @@
 class FeatureFlags {
   const FeatureFlags({
-    required this.enableMockLogin,
     required this.enableVersionCheck,
     required this.enableCrashReport,
     required this.enableAnalytics,
@@ -10,7 +9,6 @@ class FeatureFlags {
     required this.enableForceUpdateMock,
   });
 
-  final bool enableMockLogin;
   final bool enableVersionCheck;
   final bool enableCrashReport;
   final bool enableAnalytics;
@@ -19,14 +17,14 @@ class FeatureFlags {
   final bool enableDebugPanel;
   final bool enableForceUpdateMock;
 
-  Map<String, bool> toMap() => {
-    'enableMockLogin': enableMockLogin,
-    'enableVersionCheck': enableVersionCheck,
-    'enableCrashReport': enableCrashReport,
-    'enableAnalytics': enableAnalytics,
-    'enableNetworkMonitor': enableNetworkMonitor,
-    'enableLiquidGlassFallback': enableLiquidGlassFallback,
-    'enableDebugPanel': enableDebugPanel,
-    'enableForceUpdateMock': enableForceUpdateMock,
-  };
+  Map<String, bool> toMap({required bool enableMock}) => {
+        'enableMockServices': enableMock,
+        'enableVersionCheck': enableVersionCheck,
+        'enableCrashReport': enableCrashReport,
+        'enableAnalytics': enableAnalytics,
+        'enableNetworkMonitor': enableNetworkMonitor,
+        'enableLiquidGlassFallback': enableLiquidGlassFallback,
+        'enableDebugPanel': enableDebugPanel,
+        'enableForceUpdateMock': enableForceUpdateMock,
+      };
 }

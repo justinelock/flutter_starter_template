@@ -158,14 +158,18 @@ class SettingsPage extends ConsumerWidget {
                 title: l10n.debugFeatureFlags,
                 grouped: true,
                 children: env.featureFlags
-                    .toMap()
+                    .toMap(enableMock: env.enableMock)
                     .entries
                     .map(
                       (entry) => AppGlassListTile(
                         title: entry.key,
                         trailing: Text(entry.value.toString()),
                         isLast: entry.key ==
-                            env.featureFlags.toMap().entries.last.key,
+                            env.featureFlags
+                                .toMap(enableMock: env.enableMock)
+                                .entries
+                                .last
+                                .key,
                       ),
                     )
                     .toList(),

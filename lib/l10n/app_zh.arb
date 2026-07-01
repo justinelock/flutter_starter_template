@@ -80,5 +80,8 @@
   "retryAction": "重试",
   "packageInfoLoadFailed": "无法加载应用版本",
   "pageNotFound": "页面不存在",
-  "initializing": "初始化中..."
+  "initializing": "初始化中...",
+  "homeWelcomeTitle": "欢迎使用",
+  "homeWelcomeSubtitle": "Fork 本模版后，请将此页替换为你的产品首页。",
+  "homeGettingStartedHint": "请阅读 docs/TEMPLATE_CHECKLIST.md 完成必改项。"
 }
