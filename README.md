@@ -4,6 +4,11 @@ A production-oriented Flutter starter template for Android, iOS, Web, Windows, m
 
 **Fork 后请先阅读 [docs/TEMPLATE_CHECKLIST.md](docs/TEMPLATE_CHECKLIST.md)。**
 
+中文文档：
+
+- [项目框架介绍](docs/ARCHITECTURE.md) — 架构、分层、路由、设计系统、扩展方式
+- [新手指引](docs/GETTING_STARTED.md) — 环境准备、跑通项目、第一个改动、对接后端
+
 ## Architecture
 
 The project uses a feature-first structure with shared application and core infrastructure layers.
@@ -72,6 +77,17 @@ Default remote auth uses email/password JSON (`RemoteAuthService`). For mobile-I
 ## Crash And Analytics
 
 `CrashReporter` and `AnalyticsService` are vendor-neutral abstractions. Wire Firebase Crashlytics, Sentry, or another SDK behind these interfaces without leaking SDK calls into feature code.
+
+## 相关文档
+
+| 文档 | 说明 |
+|------|------|
+| [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) | 新手指引（中文） |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 项目框架介绍（中文） |
+| [docs/TEMPLATE_CHECKLIST.md](docs/TEMPLATE_CHECKLIST.md) | Fork 后必改清单 |
+| [docs/iphone_17_pro_ui_theme.md](docs/iphone_17_pro_ui_theme.md) | UI 主题规格 |
+| [docs/ios_font.md](docs/ios_font.md) | 排版规格 |
+| [docs/riverpod3_flutter.md](docs/riverpod3_flutter.md) | Riverpod 3 参考 |
 
 ## CI/CD
 

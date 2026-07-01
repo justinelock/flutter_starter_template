@@ -179,6 +179,8 @@ flutter test
 ## 相关文档
 
 - [README](../README.md) — 架构与开发命令
+- [新手指引](./GETTING_STARTED.md) — 跑通项目、第一个改动
+- [项目框架介绍](./ARCHITECTURE.md) — 分层、路由、设计系统详解
 - [docs/ios_font.md](./ios_font.md) — 排版规格
 - [docs/iphone_17_pro_ui_theme.md](./iphone_17_pro_ui_theme.md) — 主题色与玻璃规格
 - [docs/riverpod3_flutter.md](./riverpod3_flutter.md) — Riverpod 3 参考

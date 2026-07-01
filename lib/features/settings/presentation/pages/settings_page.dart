@@ -22,41 +22,60 @@ import '../widgets/locale_selector.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/theme_selector.dart';
 
+/// 设置页面 (SettingsPage)
+/// 
+/// 该页面聚合了应用级别的所有偏好设置，包括：
+/// 1. 视觉：主题切换（亮色/暗色）。
+/// 2. 国际化：语言切换。
+/// 3. 系统：版本检查、缓存清理、环境信息展示。
+/// 4. 账号：登出逻辑。
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 监听环境配置（用于展示当前运行环境，如 Dev/Prod）
     final env = ref.watch(envConfigProvider);
+    // 监听包信息（用于展示版本号）
     final packageInfo = ref.watch(packageInfoProvider);
+    // 获取国际化资源快捷引用
     final l10n = context.l10n;
 
+    // 使用 AppTabPage 统一样式，该组件自带了 Liquid Glass 设计系统的滚动和模糊效果。
     return AppTabPage(
       appBar: AppGlassAppBar(
         title: l10n.settings,
         leading: AppGlassIconButton(
+          // 返回首页 Tab。使用 switchMainTab 而不是 context.pop，
+          // 因为在 StatefulShellRoute 中切换分支比销毁页面更平滑。
           onPressed: () => switchMainTab(context, 0),
           icon: const AppSvgIcon(assetPath: AppSvgAssets.arrowBack),
         ),
       ),
       body: PageContainer(
-        maxWidth: 760,
+        maxWidth: 760, // 限制最大宽度，确保在大屏或 Web 端具有良好的可阅读性。
         child: ListView(
           children: [
+            // 主题设置区域
             SettingsSection(
               title: l10n.themeSection,
               children: const [ThemeSelector()],
             ),
             const SizedBox(height: 16),
+            
+            // 语言设置区域
             SettingsSection(
               title: l10n.languageSection,
               children: const [LocaleSelector()],
             ),
             const SizedBox(height: 16),
+            
+            // 应用系统区域
             SettingsSection(
               title: l10n.appSection,
-              grouped: true,
+              grouped: true, // 开启分组模式，子项目之间会自动添加分割线并处理圆角。
               children: [
+                // 异步展示当前版本号
                 packageInfo.when(
                   data: (info) => AppGlassListTile(
                     title: l10n.versionLabel,
@@ -71,36 +90,41 @@ class SettingsPage extends ConsumerWidget {
                     subtitle: l10n.loading,
                   ),
                 ),
+                
+                // 展示当前 API 环境
                 AppGlassListTile(
                   title: l10n.environmentLabel,
                   subtitle: env.environment.name,
                 ),
+                
+                // 检查更新功能
                 AppGlassListTile(
                   title: l10n.checkUpdates,
                   trailing: const AppSvgIcon(assetPath: AppSvgAssets.arrowRight),
                   onTap: () async {
                     try {
-                      // 步骤 1：触发版本检查；设置页手动检查使用当前页面 context 弹出更新对话框。
+                      // 手动触发版本检查流程
                       final info = await ref
                           .read(settingsControllerProvider)
                           .checkUpdate();
 
                       if (!context.mounted) return;
 
-                      // 步骤 2：没有更新时主动反馈，避免用户误以为点击无效。
+                      // 如果当前已经是最新版本，通过提示框告知用户，避免交互反馈缺失。
                       if (!info.hasUpdate) {
                         ref.read(appMessengerProvider).show(l10n.noUpdates);
                         return;
                       }
 
-                      // 步骤 3：发现更新时阻塞当前操作，用户选择后对话框自行关闭或保持强制更新。
+                      // 发现新版本时弹出更新对话框。
+                      // 如果是强制更新 (forceUpdate)，点击外部无法关闭。
                       await showDialog<UpdateDialogAction>(
                         context: context,
                         barrierDismissible: !info.forceUpdate,
                         builder: (context) => UpdateDialog(info: info),
                       );
                     } catch (_) {
-                      // 步骤 3：检查失败时显示用户友好消息，不暴露底层网络或解析异常。
+                      // 网络或解析失败时，向用户展示错误提示。
                       if (context.mounted) {
                         ref
                             .read(appMessengerProvider)
@@ -112,14 +136,15 @@ class SettingsPage extends ConsumerWidget {
                     }
                   },
                 ),
+                
+                // 清理缓存功能
                 AppGlassListTile(
                   title: l10n.clearCache,
                   trailing: const AppSvgIcon(assetPath: AppSvgAssets.trash),
                   onTap: () async {
-                    // 步骤 1：先清理普通缓存；安全存储由退出登录等认证流程单独控制。
+                    // 调用控制器清理本地持久化数据（如 SharedPreferences）。
                     await ref.read(settingsControllerProvider).clearCache();
 
-                    // 步骤 2：清理完成后给用户明确反馈。
                     if (context.mounted) {
                       ref
                           .read(appMessengerProvider)
@@ -130,15 +155,19 @@ class SettingsPage extends ConsumerWidget {
                     }
                   },
                 ),
+                
+                // 退出登录
                 AppGlassListTile(
                   title: l10n.logout,
                   trailing: const AppSvgIcon(assetPath: AppSvgAssets.exit),
                   isLast: true,
                   onTap: () async {
-                    // 步骤 1：先交给 SettingsController 清理认证状态和本地缓存。
+                    // 1. 清理 Session 和 Token。
                     await ref.read(settingsControllerProvider).logout();
 
-                    // 步骤 2：页面仍然挂载时再跳转，避免异步完成后使用失效 context。
+                    // 2. 跳转回登录页。由于 routerProvider 监听了 Auth 状态，
+                    // 此处即使不调用 go，路由守卫也会自动将用户踢回登录页，
+                    // 但显式调用 go 可以确保路径切换的即时感。
                     if (context.mounted) {
                       ref
                           .read(appMessengerProvider)
@@ -152,6 +181,8 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ],
             ),
+            
+            // 调试面板：仅在非生产环境显示，用于快速查看功能旗标 (FeatureFlags) 状态。
             if (env.featureFlags.enableDebugPanel) ...[
               const SizedBox(height: 16),
               SettingsSection(
